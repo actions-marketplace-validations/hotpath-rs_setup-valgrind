@@ -12,11 +12,11 @@ fail() {
   exit 1
 }
 
-# 3.28.0.hotpath2 -> release tag VALGRIND_3_28_0_HOTPATH_2
-if [[ ! "${VERSION:-}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)\.hotpath([0-9]+)$ ]]; then
-  fail "version must look like 3.28.0.hotpath2, got '${VERSION:-}'"
+# 3.28.0.hotpath-rs -> release tag VALGRIND_3_28_0_HOTPATH_RS
+if [[ ! "${VERSION:-}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)\.hotpath-rs$ ]]; then
+  fail "version must look like 3.28.0.hotpath-rs, got '${VERSION:-}'"
 fi
-tag="VALGRIND_${BASH_REMATCH[1]}_${BASH_REMATCH[2]}_${BASH_REMATCH[3]}_HOTPATH_${BASH_REMATCH[4]}"
+tag="VALGRIND_${BASH_REMATCH[1]}_${BASH_REMATCH[2]}_${BASH_REMATCH[3]}_HOTPATH_RS"
 
 [[ "$(uname -s)" == Linux ]] || fail "Valgrind builds exist for Linux runners only, not $(uname -s)"
 case "$(uname -m)" in

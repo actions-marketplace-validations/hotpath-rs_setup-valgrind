@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         runner: [ubuntu-24.04, ubuntu-26.04, ubuntu-24.04-arm, ubuntu-26.04-arm]
-        version: [3.28.0.hotpath2]
+        version: [3.28.0.hotpath-rs]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 10
     permissions:
@@ -83,7 +83,7 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
-          version: 3.28.0.hotpath999
+          version: 3.27.0.hotpath-rs
       - id: malformed
         continue-on-error: true
         uses: ./

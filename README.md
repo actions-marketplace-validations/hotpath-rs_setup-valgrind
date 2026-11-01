@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: hotpath-rs/setup-valgrind@v1.0.0
         with:
-          version: 3.28.0.hotpath2
+          version: 3.28.0.hotpath-rs
       - run: valgrind --tool=callgrind ./target/release/my_benchmark
 ```
 
@@ -28,20 +28,20 @@ How to run a benchmark under Callgrind with hotpath and upload the merged report
 
 | Input | Required | Description |
 |---|---|---|
-| `version` | yes | Valgrind build, for example `3.28.0.hotpath2`. There is no default and no `latest`: a different build changes instruction counts, so an upgrade should be a deliberate edit that starts new baselines. |
+| `version` | yes | Valgrind build, for example `3.28.0.hotpath-rs`. There is no default and no `latest`: a different build changes instruction counts, so an upgrade should be a deliberate edit that starts new baselines. |
 
 ## Outputs
 
 | Output | Description |
 |---|---|
-| `version` | The installed version, for example `3.28.0.hotpath2`. |
+| `version` | The installed version, for example `3.28.0.hotpath-rs`. |
 | `valgrind` | Absolute path of the `valgrind` launcher, `/opt/valgrind/bin/valgrind`. |
 
 ## Available builds
 
 | `version` | Base | Runners |
 |---|---|---|
-| `3.28.0.hotpath2` | Valgrind 3.28.0 + arm64 `B` jump-kind fix | Linux x86_64 and ARM64, built on Ubuntu 24.04, tested on 24.04 and 26.04 |
+| `3.28.0.hotpath-rs` | Valgrind 3.28.0 + arm64 `B` jump-kind fix | Linux x86_64 and ARM64, built on Ubuntu 24.04, tested on 24.04 and 26.04 |
 
 Builds are linked against glibc of Ubuntu 24.04 and run on that and newer distributions. macOS and Windows are not supported by Valgrind.
 
