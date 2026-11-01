@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Install actionlint
+        env:
+          VERSION: 1.7.12
+          SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          curl -fsSL -o actionlint.tar.gz \
+            "https://github.com/rhysd/actionlint/releases/download/v$VERSION/actionlint_${VERSION}_linux_amd64.tar.gz"
+          echo "$SHA256  actionlint.tar.gz" | sha256sum -c -
+          tar -xzf actionlint.tar.gz -C "$RUNNER_TEMP" actionlint
+          rm actionlint.tar.gz
+      - name: shellcheck
+        run: shellcheck scripts/*.sh
+      - name: actionlint
+        run: '"$RUNNER_TEMP/actionlint" .github/workflows/*.yml'
+
+  # Every build in checksums.txt on every supported runner image.
+  install:
+    name: install ${{ matrix.version }} on ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-26.04, ubuntu-24.04-arm, ubuntu-26.04-arm]
+        version: [3.28.0.hotpath2]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - id: valgrind
+        uses: ./
+        with:
+          version: ${{ matrix.version }}
+      - name: Check
+        env:
+          VERSION: ${{ matrix.version }}
+          OUT_VERSION: ${{ steps.valgrind.outputs.version }}
+          OUT_VALGRIND: ${{ steps.valgrind.outputs.valgrind }}
+        run: |
+          test "$OUT_VERSION" = "$VERSION"
+          test "$OUT_VALGRIND" = /opt/valgrind/bin/valgrind
+          test "$(command -v valgrind)" = /opt/valgrind/bin/valgrind
+          test "$(valgrind --version)" = "valgrind-$VERSION"
+          valgrind -q --tool=callgrind --callgrind-out-file=true.out /bin/true
+          grep -x "creator: callgrind-$VERSION" true.out
+      # Installing again in the same job replaces the first install.
+      - uses: ./
+        with:
+          version: ${{ matrix.version }}
+
+  # A version this action release does not know must fail, not install.
+  unknown-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - id: unknown
+        continue-on-error: true
+        uses: ./
+        with:
+          version: 3.28.0.hotpath999
+      - id: malformed
+        continue-on-error: true
+        uses: ./
+        with:
+          version: latest
+      - name: Check both failed
+        env:
+          UNKNOWN: ${{ steps.unknown.outcome }}
+          MALFORMED: ${{ steps.malformed.outcome }}
+        run: |
+          test "$UNKNOWN" = failure
+          test "$MALFORMED" = failure
+          test ! -e /opt/valgrind

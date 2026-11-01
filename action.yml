@@ -1,0 +1,40 @@
+name: Setup hotpath Valgrind
+description: >-
+  Install hotpath's patched Valgrind build on Linux runners (x86_64 and ARM64)
+  for deterministic Callgrind instruction counts.
+author: hotpath-rs
+branding:
+  icon: cpu
+  color: orange
+
+# Downloads a build from https://github.com/hotpath-rs/valgrind/releases,
+# checks it against the SHA-256 recorded in checksums.txt of this action
+# release, installs it to /opt/valgrind and puts /opt/valgrind/bin first on
+# PATH for the following steps.
+inputs:
+  version:
+    description: >-
+      Valgrind build to install, for example 3.28.0.hotpath2. Required and
+      exact: a different build changes instruction counts, so an upgrade is a
+      deliberate edit.
+    required: true
+
+outputs:
+  version:
+    description: The installed version, as `valgrind --version` prints it without the `valgrind-` prefix.
+    value: ${{ steps.install.outputs.version }}
+  valgrind:
+    description: Absolute path of the installed `valgrind` launcher.
+    value: ${{ steps.install.outputs.valgrind }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install Valgrind
+      id: install
+      shell: bash
+      env:
+        # Inputs reach the script through the environment, never interpolated
+        # into the script text.
+        VERSION: ${{ inputs.version }}
+      run: bash "$GITHUB_ACTION_PATH/scripts/install.sh"
