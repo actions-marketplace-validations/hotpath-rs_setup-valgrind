@@ -13,7 +13,7 @@ Versions are `vMAJOR.MINOR.PATCH` tags of immutable GitHub releases. A published
 ## Adding a Valgrind build
 
 1. Publish the build in [hotpath-rs/valgrind](https://github.com/hotpath-rs/valgrind) (tag `VALGRIND_<x>_<y>_<z>_HOTPATH_RS`, version `<x>.<y>.<z>.hotpath-rs`).
-2. Download its `SHA256SUMS`, check it with `gh attestation verify <file> --repo hotpath-rs/valgrind`, and append the `valgrind-<version>-linux-*.tar.zst` lines to `checksums.txt`.
+2. Download its `SHA256SUMS`, check it with `gh attestation verify <file> --repo hotpath-rs/valgrind --predicate-type https://slsa.dev/provenance/v1`, and append the `valgrind-<version>-linux-*.tar.zst` lines to `checksums.txt`.
 3. Add the version to the `install` matrix in `.github/workflows/ci.yml` and to "Available builds" in `README.md`.
 
 ## Validation (before every release)

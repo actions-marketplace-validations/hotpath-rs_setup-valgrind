@@ -49,7 +49,6 @@ Builds are linked against glibc of Ubuntu 24.04 and run on that and newer distri
 
 - Each action release records the SHA-256 of every build it can install (`checksums.txt`). The download is checked against that, not against the release it comes from, so a replaced file cannot pass.
 - Action releases are immutable, and there is no moving `v1` tag: `@v1.0.0` always runs the same code. Pinning the commit SHA (`hotpath-rs/setup-valgrind@<sha> # v1.0.0`) works as well.
-- The builds carry GitHub build provenance attestations: `gh attestation verify <file> --repo hotpath-rs/valgrind`.
 
 ## License
 
