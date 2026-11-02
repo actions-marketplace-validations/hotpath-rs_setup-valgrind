@@ -1,2 +1,4 @@
 b54038f086546df9f50d8f267075f76da84f883347929f26d46008e532807126  valgrind-3.28.0.hotpath-rs-linux-arm64.tar.zst
 0c4699d73afe0c038ac5c9c450faf3016c5212d992ddef29aa46730150654a6c  valgrind-3.28.0.hotpath-rs-linux-x86_64.tar.zst
+08d0d7ab60fc8cc5c7f46fdc343b8884dedac6ee1bc691facf2790ae2b7e5ef7  valgrind-3.28.0.hotpath-rs-2-linux-arm64.tar.zst
+ea5cd347c93ff1151da1712cb00d1abb0f94cc642a2a39ca5e1cd46f76017004  valgrind-3.28.0.hotpath-rs-2-linux-x86_64.tar.zst

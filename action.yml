@@ -14,7 +14,7 @@ branding:
 inputs:
   version:
     description: >-
-      Valgrind build to install, for example 3.28.0.hotpath-rs. Required and
+      Valgrind build to install, for example 3.28.0.hotpath-rs-2. Required and
       exact: a different build changes instruction counts, so an upgrade is a
       deliberate edit.
     required: true
